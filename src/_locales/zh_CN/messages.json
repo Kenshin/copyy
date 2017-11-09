@@ -1,0 +1,9 @@
+{
+   "desc": {
+      "message": "一个「只专注复制」这件小事的扩展。"
+   },
+   "extName": {
+      "description": "Extension name.",
+      "message": "CopyY"
+   }
+}

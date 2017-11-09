@@ -1,0 +1,9 @@
+{
+   "desc": {
+      "message": "一個「只專註複製」這件小事的擴展。"
+   },
+   "extName": {
+      "description": "Extension name.",
+      "message": "Copy"
+   }
+}
