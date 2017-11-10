@@ -23,6 +23,20 @@ chrome.contextMenus.create({
 chrome.contextMenus.create({
     "id"       : "global2md",
     "parentId" : "copyy",
+    "title"    : "复制选中内容为 Markdown",
+    "contexts" : [ "page" ],
+});
+
+chrome.contextMenus.create({
+    "id"       : "global2png",
+    "parentId" : "copyy",
+    "title"    : "复制选中内容为 PNG",
+    "contexts" : [ "page" ],
+});
+
+chrome.contextMenus.create({
+    "id"       : "global2md",
+    "parentId" : "copyy",
     "title"    : "复制为 Markdown",
     "contexts" : [ "page" ],
 });

@@ -1,6 +1,10 @@
 console.log( "=== copyy contentscripts load ===" )
 
 import "./vender/notify/notify.css";
+import "./assets/css/style.css";
+
+import domtoimage from 'dom2image';
+import FileSaver  from 'filesaver';
 
 let $target;
 
@@ -41,6 +45,55 @@ function selected() {
 }
 
 /***********************
+ * Highlight
+ ***********************/
+
+function highlight() {
+    let $prev;
+    const highlight_class = "copyy-highlight-selector",
+          dtd             = $.Deferred(),
+          mousemoveEvent  = event => {
+            if ( !$prev ) {
+                $( event.target ).addClass( highlight_class );
+            } else {
+                $prev.removeClass( highlight_class );
+                $( event.target ).addClass( highlight_class );
+            }
+            $prev = $( event.target );
+    };
+    $( "html" ).one( "click", event => {
+        if ( !$prev ) return;
+        $( event.target ).removeClass( highlight_class );
+        $( "html"       ).off( "mousemove", mousemoveEvent );
+        $prev = undefined;
+        dtd.resolve( event.target );
+    });
+    $( "html" ).one( "keydown", event => {
+        if ( event.keyCode == 27 && $prev ) {
+            $( event.target ).find( `.${highlight_class}` ).removeClass( highlight_class );
+            $( "html"       ).off( "mousemove", mousemoveEvent );
+            $prev = undefined;
+        }
+    });
+    $( "html" ).on( "mousemove", mousemoveEvent );
+    return dtd;
+}
+
+/***********************
+ * Download
+ ***********************/
+
+/**
+ * @param {string} image base64 code
+ * @param {string} name
+ */
+function download( data, name ) {
+    const $a   = $( `<a style="display:none" href=${data} download="${name}"></a>` ).appendTo( "body" );
+    $a[0].click();
+    $a.remove();
+}
+
+/***********************
  * Image to base64
  ***********************/
 
@@ -68,6 +121,29 @@ function base64( url, callback ) {
         canvas        = null;
     };
     img.src           = url;
+}
+
+/***********************
+ * to Image
+ ***********************/
+
+/**
+ * Create PNG
+ * 
+ * @param {html}     html element
+ * @param {string}   name
+ * @param {function} callback
+ */
+function png( element, name, callback ) {
+    try {
+        domtoimage.toBlob( element )
+        .then( blob => {
+            blob && FileSaver.saveAs( blob, name );
+            callback( !!blob );
+        });
+    } catch ( error ) {
+        callback( false );        
+    }
 }
 
 /***********************
@@ -108,6 +184,15 @@ chrome.runtime.onMessage.addListener( function( message, sender, sendResponse ) 
         case "img2md":
             console.log( message.content.srcUrl )
             copy( `![${message.content.srcUrl}](${message.content.srcUrl})` );
+            break;
+        case "global2png":
+            highlight().done( result => {
+                console.log( result )
+                result && new Notify().Render( "开始转换，成功后自动下载，请稍等。" );
+                png( result, $( "head title" ).text().trim() + ".png", result => {
+                    !result && new Notify().Render( 2, "转换失败，请重新选择。" );
+                });
+            });
             break;
     }
 })
