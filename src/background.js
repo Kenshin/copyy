@@ -1,10 +1,18 @@
 console.log( "=== copyy background load ===" )
 
+/***********************
+ * Root menu
+ ***********************/
+
 chrome.contextMenus.create({
     "id"   : "copyy",
     "title": "CopyY",
     "contexts" : [ "all" ],
 });
+
+/***********************
+ * Link menu
+ ***********************/
 
 chrome.contextMenus.create({
     "id"       : "link2md",
@@ -12,6 +20,10 @@ chrome.contextMenus.create({
     "title"    : "复制为 Markdown",
     "contexts" : [ "link" ],
 });
+
+/***********************
+ * Page menu
+ ***********************/
 
 chrome.contextMenus.create({
     "id"       : "global2txt",
@@ -40,6 +52,10 @@ chrome.contextMenus.create({
     "title"    : "复制选中内容为 Markdown",
     "contexts" : [ "page" ],
 });
+
+/***********************
+ * Image menu
+ ***********************/
 
 chrome.contextMenus.create({
     "id"       : "img2base64",
