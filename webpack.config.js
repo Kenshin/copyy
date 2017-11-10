@@ -152,6 +152,7 @@ const webpack = require( 'webpack' ),
           jquery     : __dirname + '/src/vender/jquery-2.1.1.min.js',
           dom2image  : __dirname + '/src/vender/dom2image.min.js',
           filesaver  : __dirname + '/src/vender/filesaver.min.js',
+          markdown   : __dirname + '/node_modules/to-markdown/dist/to-markdown.js',
 
           velocity   : __dirname + '/src/vender/velocity.min.js',
           wavess     : __dirname + '/src/vender/waves/waves.js',

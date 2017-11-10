@@ -5,6 +5,7 @@ import "./assets/css/style.css";
 
 import domtoimage from 'dom2image';
 import FileSaver  from 'filesaver';
+import toMarkdown from 'markdown';
 
 let $target;
 
@@ -147,6 +148,39 @@ function png( element, name, callback ) {
 }
 
 /***********************
+ * to Markdown
+ ***********************/
+
+/**
+ * @param {string} data
+ * @param {string} name
+ * @param {function} 0: base64; 1: error
+ */
+function markdown( data, name, callback ) {
+    try {
+        const md     = toMarkdown( data, { gfm: true }),
+              base64 = "data:text/plain;charset=utf-8," + encodeURIComponent( md );
+        name ? download( base64, name ) : callback( md );
+    } catch( error ) {
+        callback( undefined, error );
+    }
+}
+
+/**
+ * Clear Html to MD, erorr <tag>
+ * 
+ * @param {string} convert string
+ */
+function clearMD( str ) {
+    str = str.replace( /<\/?(dl|dt|ins|font|span|div|canvas|noscript|fig\w+)[ -\w*= \w=\-.:&\/\/?!;,%+()#'"{}\u4e00-\u9fa5]*>/ig, "" )
+             .replace( /<\/?sr-[\S ]*>/ig, "" )
+             .replace( /sr-blockquote/ig, "blockquote" )
+             .replace( /<\/?style[ -\w*= \w=\-.:&\/\/?!;,+()#"\S]*>/ig, "" )
+             .replace( /(name|lable)=[\u4e00-\u9fa5 \w="-:\/\/:#;]+"/ig, "" )
+    return str;
+}
+
+/***********************
  * Chrome onMessage
  ***********************/
 
@@ -185,7 +219,7 @@ chrome.runtime.onMessage.addListener( function( message, sender, sendResponse ) 
             console.log( message.content.srcUrl )
             copy( `![${message.content.srcUrl}](${message.content.srcUrl})` );
             break;
-        case "global2png":
+        case "selected2png":
             highlight().done( result => {
                 console.log( result )
                 result && new Notify().Render( "开始转换，成功后自动下载，请稍等。" );
@@ -194,5 +228,16 @@ chrome.runtime.onMessage.addListener( function( message, sender, sendResponse ) 
                 });
             });
             break;
+        case "selected2md":
+            highlight().done( result => {
+                console.log( result )
+                $( result ).find( "img" ).each( ( idx, ele ) => {
+                    const src = $( ele ).attr( "src" );
+                    src.startsWith( "/" ) && $( ele ).attr( "src", ele.src );
+                });
+                new Notify().Render( "开始转换，成功后自动下载，请稍等。" );
+                markdown( clearMD( result.outerHTML.trim()), $( "head title" ).text().trim() + ".md" );
+            });
+        break;
     }
 })
