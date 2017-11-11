@@ -173,7 +173,7 @@ function markdown( data, name, callback ) {
  */
 function clearMD( str ) {
     str = str.replace( /<\/?(dl|dt|ins|font|span|div|canvas|noscript|fig\w+)[ -\w*= \w=\-.:&\/\/?!;,%+()#'"{}\u4e00-\u9fa5]*>/ig, "" )
-             .replace( /<\/?sr-[\S ]*>/ig, "" )
+             .replace( /<\/?sr(-[a-z]*)+[\w-\[\]="'.:&;% ]*>|<fab [\S ]*>/ig, "" )
              .replace( /sr-blockquote/ig, "blockquote" )
              .replace( /<\/?style[ -\w*= \w=\-.:&\/\/?!;,+()#"\S]*>/ig, "" )
              .replace( /(name|lable)=[\u4e00-\u9fa5 \w="-:\/\/:#;]+"/ig, "" )
