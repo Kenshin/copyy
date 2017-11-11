@@ -53,6 +53,13 @@ chrome.contextMenus.create({
     "contexts" : [ "page" ],
 });
 
+chrome.contextMenus.create({
+    "id"       : "selected2code",
+    "parentId" : "copyy",
+    "title"    : "复制代码",
+    "contexts" : [ "page" ],
+});
+
 /***********************
  * Image menu
  ***********************/

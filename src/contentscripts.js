@@ -15,7 +15,7 @@ let $target;
 
 createInput()
 function createInput() {
-    $( "html" ).append( `<input id="copyy-input" style="opacity: 0;">` );
+    $( "html" ).append( `<textarea id="copyy-input" style="opacity: 0;">` );
 }
 
 /***********************
@@ -238,6 +238,25 @@ chrome.runtime.onMessage.addListener( function( message, sender, sendResponse ) 
                 new Notify().Render( "开始转换，成功后自动下载，请稍等。" );
                 markdown( clearMD( result.outerHTML.trim()), $( "head title" ).text().trim() + ".md" );
             });
-        break;
+            break;
+        case "selected2code":
+            $target = selected();
+            console.log( $target[0] )
+            if ( $target && ( $target.is( "code" ) || $target.is( "pre" ) )) {
+                copy( $target[0].innerText );
+            } else {
+                let $parent = $target.parent(),
+                    tag     = $parent[0].tagName;
+                while ( tag && tag.toLowerCase() != "pre" ) {
+                    $parent = $parent.parent();
+                    tag     = $parent[0].tagName;
+                }
+                if ( $parent && $parent.is( "pre" )) {
+                    copy( $parent[0].innerText );
+                } else {
+                    new Notify().Render( "代码段的复制需要包含 &lt;pre&gt; 或 &lt;code&gt; 标签内。" );                    
+                }
+            }
+            break;
     }
 })
