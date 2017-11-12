@@ -241,21 +241,19 @@ chrome.runtime.onMessage.addListener( function( message, sender, sendResponse ) 
             break;
         case "selected2code":
             $target = selected();
-            console.log( $target[0] )
-            if ( $target && ( $target.is( "code" ) || $target.is( "pre" ) )) {
-                copy( $target[0].innerText );
+            let $parent = $target.parent(),
+                tag     = $parent[0].tagName,
+                tagName = "pre";
+            location.host == "gist.github.com" && ( tagName = "table" );
+            while ( tag && tag.toLowerCase() != tagName ) {
+                $parent = $parent.parent();
+                tag     = $parent[0].tagName;
+            }
+            console.log( $parent[0] )
+            if ( $parent && $parent.is( tagName )) {
+                copy( $parent[0].innerText );
             } else {
-                let $parent = $target.parent(),
-                    tag     = $parent[0].tagName;
-                while ( tag && tag.toLowerCase() != "pre" ) {
-                    $parent = $parent.parent();
-                    tag     = $parent[0].tagName;
-                }
-                if ( $parent && $parent.is( "pre" )) {
-                    copy( $parent[0].innerText );
-                } else {
-                    new Notify().Render( "代码段的复制需要包含 &lt;pre&gt; 或 &lt;code&gt; 标签内。" );                    
-                }
+                new Notify().Render( "代码段的复制需要包含 &lt;pre&gt; 或 &lt;code&gt; 标签内。" );                    
             }
             break;
     }
