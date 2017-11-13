@@ -28,35 +28,35 @@ chrome.contextMenus.create({
 chrome.contextMenus.create({
     "id"       : "global2txt",
     "parentId" : "copyy",
-    "title"    : "复制 标题 + 链接 为文本",
+    "title"    : "[1] 复制 标题 + 链接 为文本",
     "contexts" : [ "page" ],
 });
 
 chrome.contextMenus.create({
     "id"       : "global2md",
     "parentId" : "copyy",
-    "title"    : "复制 标题 + 链接 为MD格式",
+    "title"    : "[2] 复制 标题 + 链接 为MD格式",
     "contexts" : [ "page" ],
 });
 
 chrome.contextMenus.create({
     "id"       : "selected2png",
     "parentId" : "copyy",
-    "title"    : "复制选中内容为 PNG",
+    "title"    : "[3] 复制选中内容为 PNG",
     "contexts" : [ "page" ],
 });
 
 chrome.contextMenus.create({
     "id"       : "selected2md",
     "parentId" : "copyy",
-    "title"    : "复制选中内容为 Markdown",
+    "title"    : "[4] 复制选中内容为 Markdown",
     "contexts" : [ "page" ],
 });
 
 chrome.contextMenus.create({
     "id"       : "selected2code",
     "parentId" : "copyy",
-    "title"    : "复制代码",
+    "title"    : "[5] 复制代码",
     "contexts" : [ "page" ],
 });
 

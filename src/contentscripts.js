@@ -6,12 +6,42 @@ import "./assets/css/style.css";
 import domtoimage from 'dom2image';
 import FileSaver  from 'filesaver';
 import toMarkdown from 'markdown';
+import Mousetrap  from 'mousetrap';
 
 let $target;
 
 /***********************
  * Entry
  ***********************/
+
+bindShortcuts();
+function bindShortcuts() {
+    const trigger = "y y",
+          keys    = Array.from("0123456789").map( x=> `${trigger} ${x}` );
+    Mousetrap.bind( keys, ( event, combo ) => {
+        const key = combo.replace( trigger, "" ),
+              msg = {};
+        console.log( "current key is", combo, key )
+        switch ( key.trim() ) {
+            case "1":
+                msg.type = "global2txt";
+                break;
+            case "2":
+                msg.type = "global2md";
+                break;
+            case "3":
+                msg.type = "selected2png";
+                break;
+            case "4":
+                msg.type = "selected2md";
+                break;
+            case "5":
+                msg.type = "selected2code";
+                break;
+        }
+        action( msg );
+    });
+}
 
 createInput()
 function createInput() {
@@ -186,6 +216,10 @@ function clearMD( str ) {
 
 chrome.runtime.onMessage.addListener( function( message, sender, sendResponse ) {
     console.log( "chrome.runtime.messge", message, sender )
+    action( message );
+})
+
+function action( message ) {
     switch( message.type ) {
         case "link2md":
             $target = selected();
@@ -220,6 +254,7 @@ chrome.runtime.onMessage.addListener( function( message, sender, sendResponse ) 
             copy( `![${message.content.srcUrl}](${message.content.srcUrl})` );
             break;
         case "selected2png":
+            new Notify().Render( "请移动鼠标框选需要生成图片的区域" )
             highlight().done( result => {
                 console.log( result )
                 result && new Notify().Render( "开始转换，成功后自动下载，请稍等。" );
@@ -229,6 +264,7 @@ chrome.runtime.onMessage.addListener( function( message, sender, sendResponse ) 
             });
             break;
         case "selected2md":
+            new Notify().Render( "请移动鼠标框选需要生成 Markdown 的区域" )
             highlight().done( result => {
                 console.log( result )
                 $( result ).find( "img" ).each( ( idx, ele ) => {
@@ -261,4 +297,4 @@ chrome.runtime.onMessage.addListener( function( message, sender, sendResponse ) 
             }
             break;
     }
-})
+}
