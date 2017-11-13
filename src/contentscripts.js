@@ -143,7 +143,7 @@ function png( element, name, callback ) {
             callback( !!blob );
         });
     } catch ( error ) {
-        callback( false );        
+        callback( false );
     }
 }
 
@@ -245,6 +245,10 @@ chrome.runtime.onMessage.addListener( function( message, sender, sendResponse ) 
                 tag     = $parent[0].tagName,
                 tagName = "pre";
             location.host == "gist.github.com" && ( tagName = "table" );
+            if ( $target.is( "pre" ) ) {
+                copy( $target[0].innerText );
+                return;
+            }
             while ( tag && tag.toLowerCase() != tagName ) {
                 $parent = $parent.parent();
                 tag     = $parent[0].tagName;
