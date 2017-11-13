@@ -278,22 +278,24 @@ function action( message ) {
         case "selected2code":
             $target = selected();
             let $parent = $target.parent(),
-                tag     = $parent[0].tagName,
-                tagName = "pre";
-            location.host == "gist.github.com" && ( tagName = "table" );
+            tag     = $parent[0].tagName;
             if ( $target.is( "pre" ) ) {
                 copy( $target[0].innerText );
                 return;
             }
-            while ( tag && tag.toLowerCase() != tagName ) {
+            while ( tag && tag.toLowerCase() != "pre" && tag.toLowerCase() != "table" ) {
                 $parent = $parent.parent();
                 tag     = $parent[0].tagName;
             }
             console.log( $parent[0] )
-            if ( $parent && $parent.is( tagName )) {
+            if ( $parent && 
+                ( $parent.is( "table" ) && $parent.hasClass( "highlight"    ) || 
+                  $parent.is( "table" ) && $parent.hasClass( "crayon-table" ) || 
+                  $parent.is( "pre" )
+                )) {
                 copy( $parent[0].innerText );
             } else {
-                new Notify().Render( "代码段的复制需要包含 &lt;pre&gt; 或 &lt;code&gt; 标签内。" );                    
+                new Notify().Render( "代码段的复制需要包含 &lt;pre&gt; 或 &lt;code&gt; 标签内。" );
             }
             break;
     }
