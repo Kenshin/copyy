@@ -45,7 +45,7 @@ function bindShortcuts() {
 
 createInput()
 function createInput() {
-    $( "html" ).append( `<textarea id="copyy-input" style="opacity: 0;">` );
+    $( "html" ).append( `<textarea id="copyy-input" style="opacity: 0;position: fixed;">` );
 }
 
 /***********************
